@@ -97,9 +97,19 @@ export const getExpensesByDateRange = async (startdate, enddate) => {
         }
 
         const getExpensesByDateRangeQueryResult = await getExpensesByDateRangeQueryHandler(whereConditions);
+        const dayWiseExpenses = [];
+
+        for (let i = 0; i < getExpensesByDateRangeQueryResult?.length; i++) {
+            const oneDayExpense = getExpensesByDateRangeQueryResult[i];
+
+            dayWiseExpenses.push({
+                date: oneDayExpense.date,
+                totalexpense: Object.values(oneDayExpense.expenses).reduce((a,b) => a + b)
+            });
+        }
 
         return {
-            data: getExpensesByDateRangeQueryResult
+            data: dayWiseExpenses
         }
     }
     catch (error) {
@@ -110,7 +120,6 @@ export const getExpensesByDateRange = async (startdate, enddate) => {
 }
 
 export const updateOneDayExpense = async (date, payload) => {
-    console.log(payload);
     try {
         const whereConditions = {
             where: {

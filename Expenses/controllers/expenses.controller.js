@@ -59,9 +59,9 @@ export const getExpensesByDateRangeController = async (req, res) => {
     try {
         const getExpensesByDateRangeServiceResult = await getExpensesByDateRange(req.body.startdate, req.body.enddate);
 
-        return res.status(200).json({
-            expenses: getExpensesByDateRangeServiceResult?.data
-        });
+        return res.status(200).json(
+            getExpensesByDateRangeServiceResult?.data
+        );
     }
     catch (error) {
         return res.status(500).json({
