@@ -3,6 +3,7 @@ import {
     getOneDayExpenseQueryHandler,
     getExpensesQueryHandler,
     getCurrentMonthTotalExpensesQueryHandler, 
+    getCurrentMonthDailyExpensesQueryHandler,
     getExpensesByDateRangeQueryHandler,
     updateOneDayExpenseQueryHandler
 } from "../queries.js";
@@ -79,6 +80,29 @@ export const getCurrentMonthTotalExpenses = async () => {
         return {
             message: error
         }
+    }
+}
+
+export const getCurrentMonthDailyExpenses = async () => {
+    try {
+        const date = new Date();
+        const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1, 0).getTime()/1000;
+        const currentDayOfMonth = new Date().setHours(0,0,0,0)/1000;
+
+        const whereConditions = {
+            where: {
+                date: {
+                    [Op.gte]: firstDayOfMonth,
+                    [Op.lte]: currentDayOfMonth
+                }
+            }
+        }
+
+        const getExpensesQueryResult = await getCurrentMonthDailyExpensesQueryHandler(whereConditions);
+        return getExpensesQueryResult;
+    }
+    catch (error) {
+        return error;
     }
 }
 

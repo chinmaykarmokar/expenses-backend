@@ -40,6 +40,16 @@ export const getCurrentMonthTotalExpensesQueryHandler = async (whereConditions) 
     }
 }
 
+export const getCurrentMonthDailyExpensesQueryHandler = async (whereConditions) => {
+    try {
+        const expenses = await Expenses.findAll(whereConditions);
+        return expenses;
+    }
+    catch (error) {
+        return error;
+    }
+}
+
 export const getExpensesByDateRangeQueryHandler = async (whereConditions) => {
     try {
         const expenses = await Expenses.findAll(whereConditions);

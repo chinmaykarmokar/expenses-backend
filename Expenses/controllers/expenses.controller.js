@@ -2,6 +2,7 @@ import {
     addExpenseService,
     getExpensesService,
     getCurrentMonthTotalExpenses,
+    getCurrentMonthDailyExpenses,
     getExpensesByDateRange,
     updateOneDayExpense
 } from "../services/expenses.service.js";
@@ -42,16 +43,31 @@ export const getExpensesController = async (req, res) => {
 
 export const getCurrentMonthlTotalExpenses = async (req, res) => {
     try {
-        const getCurrentMonthTotalExpensesServiceResult = await getCurrentMonthTotalExpenses();
+        const getCurrentMonthDailyExpensesServiceResult = await getCurrentMonthTotalExpenses();
 
         return res.status(200).json({
-            expenses: getCurrentMonthTotalExpensesServiceResult?.data
+            expenses: getCurrentMonthDailyExpensesServiceResult?.data
         });
     }
     catch (error) {
         return res.status(500).json({
             error: error
         });
+    }
+}
+
+export const getCurrentMonthDailyExpensesController = async (req, res) => {
+    try {
+        const getCurrentMonthDailyExpensesServiceResult = await getCurrentMonthDailyExpenses();
+
+        return res.status(200).json(
+            getCurrentMonthDailyExpensesServiceResult
+        )
+    }
+    catch (error) {
+        return res.status(500).json({
+            error: error
+        })
     }
 }
 
