@@ -10,16 +10,6 @@ export const addExpenseQueryHandler = async (payload) => {
     }
 }
 
-export const getExpensesQueryHandler = async () => {
-    try {
-        const expenses = await Expenses.findAll();
-        return expenses;
-    }
-    catch (error) {
-        return error;
-    }
-}
-
 export const getOneDayExpenseQueryHandler = async (whereConditions) => {
     try {
         const expenses = await Expenses.findOne(whereConditions);

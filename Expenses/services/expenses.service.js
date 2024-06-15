@@ -1,7 +1,6 @@
 import { 
     addExpenseQueryHandler, 
     getOneDayExpenseQueryHandler,
-    getExpensesQueryHandler,
     getCurrentMonthTotalExpensesQueryHandler, 
     getCurrentMonthDailyExpensesQueryHandler,
     getExpensesByDateRangeQueryHandler,
@@ -31,12 +30,18 @@ export const addExpenseService = async (payload) => {
     }
 }
 
-export const getExpensesService = async () => {
+export const getOneDayExpenseService = async (date) => {
     try {
-        const getExpensesQueryResult = await getExpensesQueryHandler();
-        return {
-            data: getExpensesQueryResult
-        };
+        const dateInEpoch = new Date(date)/1000;
+
+        const whereConditions = {
+            where: {
+                date: dateInEpoch
+            }
+        }
+
+        const expenses = await getOneDayExpenseQueryHandler(whereConditions);
+        return expenses?.expenses;
     }
     catch (error) {
         return {
@@ -45,7 +50,7 @@ export const getExpensesService = async () => {
     }
 }
 
-export const getCurrentMonthTotalExpenses = async () => {
+export const getCurrentMonthTotalExpensesService = async () => {
     try {
         const date = new Date();
         const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1, 0).getTime()/1000;
@@ -83,7 +88,7 @@ export const getCurrentMonthTotalExpenses = async () => {
     }
 }
 
-export const getCurrentMonthDailyExpenses = async () => {
+export const getCurrentMonthDailyExpensesService = async () => {
     try {
         const date = new Date();
         const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1, 0).getTime()/1000;
@@ -99,14 +104,28 @@ export const getCurrentMonthDailyExpenses = async () => {
         }
 
         const getExpensesQueryResult = await getCurrentMonthDailyExpensesQueryHandler(whereConditions);
-        return getExpensesQueryResult;
+        
+        const dayWiseExpenses = [];
+
+        for (let i = 0; i < getExpensesQueryResult?.length; i++) {
+            const oneDayExpense = getExpensesQueryResult[i];
+
+            dayWiseExpenses.push({
+                date: oneDayExpense.date,
+                totalexpense: Object.values(oneDayExpense.expenses).reduce((a,b) => a + b)
+            });
+        }
+
+        return {
+            data: dayWiseExpenses
+        }
     }
     catch (error) {
         return error;
     }
 }
 
-export const getExpensesByDateRange = async (startdate, enddate) => {
+export const getExpensesByDateRangeService = async (startdate, enddate) => {
     try {
         const startDate = new Date(startdate).getTime()/1000;
         const endDate = new Date(enddate).getTime()/1000;
@@ -143,7 +162,7 @@ export const getExpensesByDateRange = async (startdate, enddate) => {
     }
 }
 
-export const updateOneDayExpense = async (date, payload) => {
+export const updateOneDayExpenseService = async (date, payload) => {
     try {
         const whereConditions = {
             where: {

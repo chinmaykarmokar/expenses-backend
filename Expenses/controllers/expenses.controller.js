@@ -1,16 +1,16 @@
 import { 
     addExpenseService,
-    getExpensesService,
-    getCurrentMonthTotalExpenses,
-    getCurrentMonthDailyExpenses,
-    getExpensesByDateRange,
-    updateOneDayExpense
+    getOneDayExpenseService,
+    getCurrentMonthTotalExpensesService,
+    getCurrentMonthDailyExpensesService,
+    getExpensesByDateRangeService,
+    updateOneDayExpenseService
 } from "../services/expenses.service.js";
 
 export const addExpenseController = async (req, res) => {
     try {
         const payload = {
-            date: req.body.date,
+            date: new Date(req.body.date)/1000,
             expenses: req.body.expenses
         }
     
@@ -27,23 +27,25 @@ export const addExpenseController = async (req, res) => {
     }
 }
 
-export const getExpensesController = async (req, res) => {
+export const getOneDayExpenseController = async (req, res) => {
     try {
-        const getExpensesServiceResult = await getExpensesService();
-        return res.status(200).json({
-            data: getExpensesServiceResult?.data
-        })
+        const date = new Date(req.body.date)/1000;
+
+        const getOneDayExpenseServiceResult = await getOneDayExpenseService(date);
+        return res.status(200).json(
+            getOneDayExpenseServiceResult
+        );
     }
     catch (error) {
         return res.status(500).json({
             error: error
-        });
+        })
     }
 }
 
 export const getCurrentMonthlTotalExpenses = async (req, res) => {
     try {
-        const getCurrentMonthDailyExpensesServiceResult = await getCurrentMonthTotalExpenses();
+        const getCurrentMonthDailyExpensesServiceResult = await getCurrentMonthTotalExpensesService();
 
         return res.status(200).json({
             expenses: getCurrentMonthDailyExpensesServiceResult?.data
@@ -58,10 +60,10 @@ export const getCurrentMonthlTotalExpenses = async (req, res) => {
 
 export const getCurrentMonthDailyExpensesController = async (req, res) => {
     try {
-        const getCurrentMonthDailyExpensesServiceResult = await getCurrentMonthDailyExpenses();
+        const getCurrentMonthDailyExpensesServiceResult = await getCurrentMonthDailyExpensesService();
 
         return res.status(200).json(
-            getCurrentMonthDailyExpensesServiceResult
+            getCurrentMonthDailyExpensesServiceResult?.data
         )
     }
     catch (error) {
@@ -73,7 +75,7 @@ export const getCurrentMonthDailyExpensesController = async (req, res) => {
 
 export const getExpensesByDateRangeController = async (req, res) => {
     try {
-        const getExpensesByDateRangeServiceResult = await getExpensesByDateRange(req.body.startdate, req.body.enddate);
+        const getExpensesByDateRangeServiceResult = await getExpensesByDateRangeService(req.body.startdate, req.body.enddate);
 
         return res.status(200).json(
             getExpensesByDateRangeServiceResult?.data
@@ -88,12 +90,11 @@ export const getExpensesByDateRangeController = async (req, res) => {
 
 export const updateOneDayExpenseController = async (req, res) => {
     try {
-        const date = req.body.date;
+        const date = new Date(req.body.date)/1000;
 
         let payload = req.body;
 
-        const updateOneDayExpenseServiceResult = await updateOneDayExpense(date, payload);
-        console.log(updateOneDayExpenseServiceResult);
+        await updateOneDayExpenseService(date, payload);
 
         return res.status(200).json({
             message: "Successful."

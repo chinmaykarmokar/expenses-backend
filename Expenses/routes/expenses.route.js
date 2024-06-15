@@ -1,7 +1,7 @@
 import express from "express";
 import { 
     addExpenseController,
-    getExpensesController,
+    getOneDayExpenseController,
     getCurrentMonthlTotalExpenses,
     getCurrentMonthDailyExpensesController,
     getExpensesByDateRangeController,
@@ -11,7 +11,7 @@ import {
 const router = express.Router();
 
 router.post("/addExpense", addExpenseController);
-router.get("/getExpenses", getExpensesController);
+router.post("/getOneDayExpense", getOneDayExpenseController);
 router.get("/getCurrentMonthTotalExpenses", getCurrentMonthlTotalExpenses);
 router.get("/getCurrentMonthDailyExpenses", getCurrentMonthDailyExpensesController);
 router.post("/getExpensesByDateRange", getExpensesByDateRangeController);
