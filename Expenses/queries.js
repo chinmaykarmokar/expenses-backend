@@ -2,10 +2,29 @@ import { Expenses } from "./models/expenses.model.js";
 
 export const addExpenseQueryHandler = async (payload) => {
     try {
-        const result = await Expenses.create(payload);
-        return result;
+        const expenses = await Expenses.findOne({
+            where: {
+                date: payload.date
+            }
+        });
+
+        if (expenses) {
+            const result = await updateOneDayExpenseQueryHandler(
+                payload.date.toString(), {
+                ...expenses.dataValues.expenses,
+                ...payload.expenses
+            });
+            return {
+                message: "Successfully updated result."
+            };
+        }
+        else {
+            const result = await Expenses.create(payload);
+            return result;
+        }
     }
     catch (error) {
+        print(`Error: ${error}`);
         return error;
     }
 }
@@ -51,9 +70,8 @@ export const getExpensesByDateRangeQueryHandler = async (whereConditions) => {
 }
 
 
-export const updateOneDayExpenseQueryHandler = async (date, oneDayExpense, updateExpensePayload) => {
+export const updateOneDayExpenseQueryHandler = async (date, updateExpensePayload) => {
     try {
-        console.log(oneDayExpense, updateExpensePayload)
         await Expenses.update({
             expenses: updateExpensePayload
         }, {
