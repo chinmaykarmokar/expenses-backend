@@ -179,7 +179,7 @@ export const updateOneDayExpenseService = async (date, payload) => {
             ...payload
         }
 
-        const updateExpense = await updateOneDayExpenseQueryHandler(expenses?.dataValues?.date, expenses?.dataValues, updateExpensePayload);
+        const updateExpense = await updateOneDayExpenseQueryHandler(expenses?.dataValues?.date, updateExpensePayload);
 
         return {
             message: "Expenses updated."
