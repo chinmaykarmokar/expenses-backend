@@ -32,11 +32,9 @@ export const addExpenseService = async (payload) => {
 
 export const getOneDayExpenseService = async (date) => {
     try {
-        const dateInEpoch = new Date(date)/1000;
-
         const whereConditions = {
             where: {
-                date: dateInEpoch
+                date: date
             }
         }
 
@@ -54,7 +52,7 @@ export const getCurrentMonthTotalExpensesService = async () => {
     try {
         const date = new Date();
         const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1, 0).getTime()/1000;
-        const currentDayOfMonth = new Date().setHours(0,0,0,0)/1000;
+        const currentDayOfMonth = new Date().setHours(0,0,0,0)/1000 + 19800;
 
         const whereConditions = {
             where: {
@@ -73,7 +71,7 @@ export const getCurrentMonthTotalExpensesService = async () => {
             const singleExpense = getExpensesQueryResult[i]?.dataValues?.expenses;
 
             Object.keys(singleExpense).map(expense => 
-                totalExpenses += singleExpense[expense]
+                totalExpenses += parseFloat(singleExpense[expense])
             )
         }
 
@@ -92,7 +90,7 @@ export const getCurrentMonthDailyExpensesService = async () => {
     try {
         const date = new Date();
         const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1, 0).getTime()/1000;
-        const currentDayOfMonth = new Date().setHours(0,0,0,0)/1000;
+        const currentDayOfMonth = new Date().setHours(0,0,0,0)/1000 + 19800;
 
         const whereConditions = {
             where: {
@@ -104,7 +102,6 @@ export const getCurrentMonthDailyExpensesService = async () => {
         }
 
         const getExpensesQueryResult = await getCurrentMonthDailyExpensesQueryHandler(whereConditions);
-        
         const dayWiseExpenses = [];
 
         for (let i = 0; i < getExpensesQueryResult?.length; i++) {
