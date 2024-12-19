@@ -29,7 +29,7 @@ export const addExpenseController = async (req, res) => {
 
 export const getOneDayExpenseController = async (req, res) => {
     try {
-        const date = new Date(req.body.date)/1000;
+        const date = new Date(req.query.date)/1000;
 
         const getOneDayExpenseServiceResult = await getOneDayExpenseService(date);
         return res.status(200).json(
