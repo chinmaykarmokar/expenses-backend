@@ -109,7 +109,9 @@ export const getCurrentMonthDailyExpensesService = async () => {
 
             dayWiseExpenses.push({
                 date: oneDayExpense.date,
-                totalexpense: Object.values(oneDayExpense.expenses).reduce((a,b) => a + b)
+                totalexpense: parseFloat(
+                    Object.values(oneDayExpense.expenses).reduce((a,b) => parseFloat(a) + parseFloat(b))
+                )
             });
         }
 
